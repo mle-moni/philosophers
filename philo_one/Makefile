@@ -1,0 +1,60 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mle-moni <mle-moni@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2020/02/21 14:20:54 by gel-kasr          #+#    #+#              #
+#    Updated: 2020/03/09 13:38:40 by mle-moni         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+NAME = 		philo_one
+SRCS =		srcs/philosophers.c \
+			srcs/utils/basic_fn.c \
+
+OBJS =		$(SRCS:%.c=%.o)
+DEP = 		$(OBJS:%.o=%.d)
+
+INC_DIR = 	includes/
+HEADER = 	$(INC_DIR)philosophers.h \
+			$(INC_DIR)utils.h \
+
+CC =		gcc
+CFLAGS =	-Wall -Wextra -Werror
+MAKE = 		make
+HFLAGS =	-I $(INC_DIR)
+DEBUG =		-Wall -Wextra -Werror -g3 -fsanitize=address
+LINUX =		-Wall -Wextra
+
+CURRENT_FLAGS = $(CFLAGS)
+
+all:		$(NAME)
+
+$(NAME):	$(OBJS)
+			$(CC) $(CURRENT_FLAGS) $(OBJS) -o $(NAME) -lncurses
+
+.c.o:
+			$(CC) -c $(CURRENT_FLAGS) -MMD -MP $(HFLAGS) $< -o $(<:.c=.o)
+
+clean:
+			rm -f $(OBJS) $(DEP)
+
+fclean:		clean
+			rm -f $(NAME)
+
+re:			fclean all
+
+norm:
+			norminette $(SRCS) $(HEADER)
+
+test:		$(NAME)
+			./debug/tests/tester.sh
+
+main:		$(NAME)
+			./$(NAME)
+
+.PHONY:		all re norm clean fclean main test
+
+-include 	$(DEP)
