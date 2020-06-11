@@ -6,13 +6,14 @@
 #    By: mle-moni <mle-moni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/21 14:20:54 by gel-kasr          #+#    #+#              #
-#    Updated: 2020/03/09 13:38:40 by mle-moni         ###   ########.fr        #
+#    Updated: 2020/06/11 14:23:25 by mle-moni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 		philo_one
 SRCS =		srcs/philosophers.c \
 			srcs/utils/basic_fn.c \
+			srcs/utils/ft_atoi.c \
 
 OBJS =		$(SRCS:%.c=%.o)
 DEP = 		$(OBJS:%.o=%.d)

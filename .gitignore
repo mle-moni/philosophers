@@ -35,6 +35,9 @@
 *.i*86
 *.x86_64
 *.hex
+philo_one
+philo_two
+philo_three
 
 # Debug files
 *.dSYM/
