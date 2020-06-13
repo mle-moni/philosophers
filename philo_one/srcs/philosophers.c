@@ -74,6 +74,7 @@ int			main(int ac, char **av)
 	table.forks_num = opts.number_of_philosophers;
 	table.philosophers = philosophers;
 	table.opts = &opts;
+	table.simulation_start = get_time(0);
 
 	(void)table;
 

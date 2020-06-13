@@ -1,8 +1,18 @@
 #include "utils.h"
+#include "philosophers.h"
 
-void	status_print(unsigned long timestamp,
-int index, char *status, pthread_mutex_t *mutex)
+void	status_print(char *status, t_philosopher *philosopher)
 {
+	int				index;
+	pthread_mutex_t	*mutex;
+	unsigned long	timestamp;
+	pthread_mutex_t	*mutexes;
+
+	mutexes = philosopher->table->mutexes;
+	timestamp = get_time(philosopher->table->simulation_start);
+	index = philosopher->index;
+	mutex = &(mutexes[philosopher->table->forks_num]);
+
 	pthread_mutex_lock(mutex);
 
 	ft_putnb((int)timestamp);

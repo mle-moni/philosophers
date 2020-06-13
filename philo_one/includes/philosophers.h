@@ -28,6 +28,7 @@ typedef struct	s_philosopher
 
 typedef struct	s_table
 {
+	int				simulation_start;
 	int				forks_num;
 	t_philosopher	*philosophers;
 	pthread_mutex_t	*mutexes;
