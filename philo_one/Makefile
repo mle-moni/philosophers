@@ -14,6 +14,9 @@ NAME = 		philo_one
 SRCS =		srcs/philosophers.c \
 			srcs/utils/basic_fn.c \
 			srcs/utils/ft_atoi.c \
+			srcs/utils/timing.c \
+			srcs/utils/status_print.c \
+			srcs/philo_routine.c \
 
 OBJS =		$(SRCS:%.c=%.o)
 DEP = 		$(OBJS:%.o=%.d)

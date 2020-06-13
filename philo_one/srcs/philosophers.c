@@ -21,25 +21,6 @@
 // https://timmurphy.org/2010/05/04/pthreads-in-c-a-minimal-working-example/
 // int pthread_create(pthread_t * thread, pthread_attr_t * attr, void * (*start_routine)(void *), void * arg);
 
-void		*philo_routine(void *param)
-{
-	t_philosopher	*philosopher;
-	pthread_mutex_t	*mutexes;
-
-	philosopher = (t_philosopher*)param;
-	mutexes = philosopher->table->mutexes;
-
-	pthread_mutex_lock(&(mutexes[philosopher->table->forks_num]));
-
-	ft_putstr_fd("philosopher no ", 1);
-	ft_putnb(philosopher->index);
-	ft_putstr_fd("\n", 1);
-	
-	pthread_mutex_unlock(&(mutexes[philosopher->table->forks_num]));
-
-	return (NULL);
-}
-
 int			main(int ac, char **av)
 {
 	t_options	opts;
@@ -47,15 +28,17 @@ int			main(int ac, char **av)
 	t_table		table;
 	int			i;
 
-	if (ac < 4)
+	if (ac < 5)
 	{
 		ft_putstr_fd("Missing parameters!\n", 2);
 		return (1);
 	}
 
+	opts.number_of_times_each_philosopher_must_eat = -1;
 	opts.number_of_philosophers = ft_atoi(av[1]);
 	opts.time_to_die = ft_atoi(av[2]);
 	opts.time_to_eat = ft_atoi(av[3]);
+	opts.time_to_sleep = ft_atoi(av[4]);
 
 
 	ft_putstr_fd("Opts:\n", 1);
@@ -65,11 +48,13 @@ int			main(int ac, char **av)
 	ft_putstr_fd(av[2], 1);
 	ft_putstr_fd("\ntime_to_eat: ", 1);
 	ft_putstr_fd(av[3], 1);
-	if (ac == 5)
+	ft_putstr_fd("\ntime_to_sleep: ", 1);
+	ft_putstr_fd(av[4], 1);
+	if (ac == 6)
 	{
 		opts.number_of_times_each_philosopher_must_eat = ft_atoi(av[4]);
 		ft_putstr_fd("\nnumber_of_times_each_philosopher_must_eat: ", 1);
-		ft_putstr_fd(av[4], 1);
+		ft_putstr_fd(av[5], 1);
 	}
 	ft_putstr_fd("\n\n", 1);
 
@@ -88,6 +73,7 @@ int			main(int ac, char **av)
 	}
 	table.forks_num = opts.number_of_philosophers;
 	table.philosophers = philosophers;
+	table.opts = &opts;
 
 	(void)table;
 
@@ -97,7 +83,6 @@ int			main(int ac, char **av)
 	{
 		philosophers[i].index = i + 1;
 		philosophers[i].last_meal_time = 0;
-		philosophers[i].last_sleep_time = 0;
 		philosophers[i].number_of_meals = 0;
 		philosophers[i].thread = &(threads[i]);
 		philosophers[i].table = &table;

@@ -24,12 +24,10 @@ void	ft_putstr_fd(char const *s, int fd)
 	write(fd, s, i);
 }
 
-void	ft_putnb(int number)
+void	ft_putnb(long long int num)
 {
-	long int	num;
 	char		c;
 
-	num = number;
 	if (num < 0)
 	{
 		num *= -1;
