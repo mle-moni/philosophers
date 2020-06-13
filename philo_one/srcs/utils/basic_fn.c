@@ -23,3 +23,26 @@ void	ft_putstr_fd(char const *s, int fd)
 		i++;
 	write(fd, s, i);
 }
+
+void	ft_putnb(int number)
+{
+	long int	num;
+	char		c;
+
+	num = number;
+	if (num < 0)
+	{
+		num *= -1;
+		write(1, "-", 1);
+	}
+	if (num < 10)
+	{
+		c = '0' + num;
+		write(1, &c, 1);
+	}
+	else
+	{
+		ft_putnb(num / 10);
+		ft_putnb(num % 10);
+	}
+}

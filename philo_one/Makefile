@@ -34,7 +34,7 @@ CURRENT_FLAGS = $(CFLAGS)
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-			$(CC) $(CURRENT_FLAGS) $(OBJS) -o $(NAME) -lncurses
+			$(CC) $(CURRENT_FLAGS) $(OBJS) -o $(NAME) -pthread
 
 .c.o:
 			$(CC) -c $(CURRENT_FLAGS) -MMD -MP $(HFLAGS) $< -o $(<:.c=.o)

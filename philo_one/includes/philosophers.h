@@ -13,18 +13,27 @@ typedef struct	s_options
 	int	number_of_times_each_philosopher_must_eat;
 }				t_options;
 
+struct	s_table;
+
 typedef struct	s_philosopher
 {
-	int			index;
-	int			last_meal_time;
-	int			last_sleep_time;
-	int			number_of_meals;
-	pthread_t	*thread;
+	int				index;
+	int				last_meal_time;
+	int				last_sleep_time;
+	int				number_of_meals;
+	pthread_t		*thread;
+	struct	s_table	*table;
 }				t_philosopher;
 
-typedef struct	s_fork
+typedef struct	s_table
 {
-	int	index;
-}				t_fork;
+	int				forks_num;
+	t_philosopher	*philosophers;
+	pthread_mutex_t	*mutexes;
+}				t_table;
+
+/* table.mutexes is an array of number_of_forks + 1 mutex
+** the additionnal mutex is the one used for writing safely to the stdout
+*/
 
 #endif

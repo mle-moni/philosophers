@@ -23,18 +23,30 @@
 
 void		*philo_routine(void *param)
 {
-	pthread_mutex_t	lock;
+	t_philosopher	*philosopher;
+	pthread_mutex_t	*mutexes;
 
-	philo_routine(param);
+	philosopher = (t_philosopher*)param;
+	mutexes = philosopher->table->mutexes;
+
+	pthread_mutex_lock(&(mutexes[philosopher->table->forks_num]));
+
+	ft_putstr_fd("philosopher no ", 1);
+	ft_putnb(philosopher->index);
+	ft_putstr_fd("\n", 1);
+	
+	pthread_mutex_unlock(&(mutexes[philosopher->table->forks_num]));
+
+	return (NULL);
 }
 
 int			main(int ac, char **av)
 {
 	t_options	opts;
 	pthread_t	*threads;
+	t_table		table;
 	int			i;
 
-	i = 0;
 	if (ac < 4)
 	{
 		ft_putstr_fd("Missing parameters!\n", 2);
@@ -59,27 +71,64 @@ int			main(int ac, char **av)
 		ft_putstr_fd("\nnumber_of_times_each_philosopher_must_eat: ", 1);
 		ft_putstr_fd(av[4], 1);
 	}
-	ft_putstr_fd("\n", 1);
+	ft_putstr_fd("\n\n", 1);
 
 	t_philosopher	*philosophers;
 
-	philosophers = malloc(opts.number_of_philosophers * sizeof(t_philosopher));
-	
+	// TO DO: a function that malloc things and test for enomem and return a boolean
+	philosophers = malloc(opts.number_of_philosophers * sizeof(t_philosopher));	
 	threads = malloc(opts.number_of_philosophers * sizeof(pthread_t));
 
+	table.mutexes = malloc((opts.number_of_philosophers + 1) * sizeof(pthread_mutex_t));
+	i = 0;
+	while (i < opts.number_of_philosophers + 1)
+	{
+		pthread_mutex_init(&(table.mutexes[i]), NULL);
+		i++;
+	}
+	table.forks_num = opts.number_of_philosophers;
+	table.philosophers = philosophers;
+
+	(void)table;
+
+	i = 0;
+	pthread_mutex_lock(&(table.mutexes[table.forks_num]));
 	while (i < opts.number_of_philosophers)
 	{
 		philosophers[i].index = i + 1;
 		philosophers[i].last_meal_time = 0;
 		philosophers[i].last_sleep_time = 0;
 		philosophers[i].number_of_meals = 0;
-		philosophers[i].thread = threads[i];
-		if ((pthread_create(&(threads[i]), NULL, philo_routine, NULL)) != 0)
+		philosophers[i].thread = &(threads[i]);
+		philosophers[i].table = &table;
+		if ((pthread_create(&(threads[i]), NULL, philo_routine, &philosophers[i])) != 0)
 		{
-			ft_putstr_fd("Could not create thread\n", 1);
-			return (2);
+			ft_putstr_fd("Could not create thread\n", 2);
+			exit(3);
 		}
+		else
+		{
+			ft_putstr_fd("thread created\n", 1);
+		}
+		i++;
 	}
+	pthread_mutex_unlock(&(table.mutexes[table.forks_num]));
+
+	i = 0;
+	while (i < opts.number_of_philosophers)
+	{
+		if (pthread_join(threads[i], NULL))
+		{
+			ft_putstr_fd("could not pthread_join\n", 2);
+			exit(3);
+		}
+		i++;
+	}
+
+	free(philosophers);
+	free(threads);
+
+	ft_putstr_fd("End of the program\n", 1);
 	
 	return (0);
 }
