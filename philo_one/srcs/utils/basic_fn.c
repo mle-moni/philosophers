@@ -24,7 +24,7 @@ void	ft_putstr_fd(char const *s, int fd)
 	write(fd, s, i);
 }
 
-void	ft_putnb(long long int num)
+void	ft_putnb(int num)
 {
 	char		c;
 

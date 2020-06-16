@@ -16,7 +16,9 @@ SRCS =		srcs/philosophers.c \
 			srcs/utils/ft_atoi.c \
 			srcs/utils/timing.c \
 			srcs/utils/status_print.c \
+			srcs/utils/stop_simulation.c \
 			srcs/philo_routine.c \
+			srcs/verif_routine.c \
 
 OBJS =		$(SRCS:%.c=%.o)
 DEP = 		$(OBJS:%.o=%.d)
@@ -32,7 +34,7 @@ HFLAGS =	-I $(INC_DIR)
 DEBUG =		-Wall -Wextra -Werror -g3 -fsanitize=address
 LINUX =		-Wall -Wextra
 
-CURRENT_FLAGS = $(CFLAGS)
+CURRENT_FLAGS = $(DEBUG)
 
 all:		$(NAME)
 
