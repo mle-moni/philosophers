@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 typedef struct	s_options
 {
@@ -32,6 +33,7 @@ typedef struct	s_mutexes
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	status;
 	pthread_mutex_t	stop_simu;
+	pthread_mutex_t fork_map;
 }				t_mutexes;
 
 typedef struct	s_table
@@ -39,6 +41,7 @@ typedef struct	s_table
 	int				stop;
 	int				simulation_start;
 	int				philosophers_ready;
+	int				*fork_map;
 	pthread_mutex_t	philo_ready_mutex;
 	t_philosopher	*philosophers;
 	t_mutexes		mutexes;

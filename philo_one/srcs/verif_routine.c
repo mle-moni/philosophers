@@ -17,9 +17,6 @@ static void	check_philosophers(t_table *table)
 			stop_simulation_set(table);
 			usleep(1000);
 			status_print("died", philo);
-			ft_putstr_fd("(latency = ", 1);
-			ft_putnb((now - philo->last_meal_time) - table->opts->time_to_die);
-			ft_putstr_fd(")\n", 1);
 		}
 		pthread_mutex_unlock(&philo->mutex);
 		i++;
@@ -44,6 +41,7 @@ void		*verif_routine(void *param)
 
 	table = (t_table*)param;
 	while (stop_simulation_get(table) == 0)
+	// while (3 == 0)
 	{
 		check_philosophers(table);
 		check_meal_goal_reached(table);
