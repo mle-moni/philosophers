@@ -6,13 +6,19 @@
 #    By: mle-moni <mle-moni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/21 14:20:54 by gel-kasr          #+#    #+#              #
-#    Updated: 2020/03/09 13:38:40 by mle-moni         ###   ########.fr        #
+#    Updated: 2020/06/11 14:23:25 by mle-moni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = 		philo_one
 SRCS =		srcs/philosophers.c \
 			srcs/utils/basic_fn.c \
+			srcs/utils/ft_atoi.c \
+			srcs/utils/timing.c \
+			srcs/utils/status_print.c \
+			srcs/utils/stop_simulation.c \
+			srcs/philo_routine.c \
+			srcs/verif_routine.c \
 
 OBJS =		$(SRCS:%.c=%.o)
 DEP = 		$(OBJS:%.o=%.d)
@@ -28,12 +34,12 @@ HFLAGS =	-I $(INC_DIR)
 DEBUG =		-Wall -Wextra -Werror -g3 -fsanitize=address
 LINUX =		-Wall -Wextra
 
-CURRENT_FLAGS = $(CFLAGS)
+CURRENT_FLAGS = $(DEBUG)
 
 all:		$(NAME)
 
 $(NAME):	$(OBJS)
-			$(CC) $(CURRENT_FLAGS) $(OBJS) -o $(NAME) -lncurses
+			$(CC) $(CURRENT_FLAGS) $(OBJS) -o $(NAME) -pthread
 
 .c.o:
 			$(CC) -c $(CURRENT_FLAGS) -MMD -MP $(HFLAGS) $< -o $(<:.c=.o)
