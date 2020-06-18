@@ -68,7 +68,7 @@ void			*philo_routine(void *param)
 	philosopher = (t_philosopher*)param;
 	number_of_meals_goal = philosopher->table->opts->number_of_times_each_philosopher_must_eat;
 
-	usleep((philosopher->index - 1) * 1000);
+	// usleep((philosopher->index - 1) * 1000);
 
 	while (stop_simulation_get(philosopher->table) == 0)
 	{
