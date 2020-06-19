@@ -1,5 +1,17 @@
 #include "philosophers.h"
 
+static void	check_meal_goal_reached(t_table *table)
+{
+	pthread_mutex_lock(&table->philo_ready_mutex);
+	if (table->philosophers_ready >= table->opts->number_of_philosophers)
+	{
+		stop_simulation_set(table);
+		usleep(10 * 1000);
+		ft_putstr_fd("number_of_times_each_philosopher_must_eat reached!\n", 1);
+	}
+	pthread_mutex_unlock(&table->philo_ready_mutex);
+}
+
 static void	check_philosophers(t_table *table)
 {
 	t_philosopher	*philo;
@@ -15,24 +27,11 @@ static void	check_philosophers(t_table *table)
 		if (now - philo->last_meal_time > table->opts->time_to_die)
 		{
 			stop_simulation_set(table);
-			usleep(1000);
 			status_print("died", philo);
 		}
 		pthread_mutex_unlock(&philo->mutex);
 		i++;
 	}
-}
-
-static void	check_meal_goal_reached(t_table *table)
-{
-	pthread_mutex_lock(&table->philo_ready_mutex);
-	if (table->philosophers_ready == table->opts->number_of_philosophers)
-	{
-		stop_simulation_set(table);
-		usleep(10 * 1000);
-		ft_putstr_fd("number_of_times_each_philosopher_must_eat reached!\n", 1);
-	}
-	pthread_mutex_unlock(&table->philo_ready_mutex);
 }
 
 void		*verif_routine(void *param)

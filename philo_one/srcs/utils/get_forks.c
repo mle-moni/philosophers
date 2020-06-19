@@ -2,9 +2,7 @@
 
 int				get_right_fork_id(t_philosopher *philosopher)
 {
-	if (philosopher->index == philosopher->table->opts->number_of_philosophers)
-		return (0);
-	return (philosopher->index);
+	return (philosopher->index % philosopher->table->opts->number_of_philosophers);
 }
 
 int				get_left_fork_id(t_philosopher *philosopher)

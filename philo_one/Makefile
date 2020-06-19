@@ -20,6 +20,10 @@ SRCS =		srcs/philosophers.c \
 			srcs/utils/stop_simulation.c \
 			srcs/philo_routine.c \
 			srcs/verif_routine.c \
+			srcs/eat_sleep_think.c \
+			srcs/parameters.c \
+			srcs/setup.c \
+			srcs/end_simulation.c \
 
 OBJS =		$(SRCS:%.c=%.o)
 DEP = 		$(OBJS:%.o=%.d)
