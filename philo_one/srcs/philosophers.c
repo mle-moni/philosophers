@@ -64,7 +64,9 @@ int			main(int ac, char **av)
 	philosophers = malloc(opts.number_of_philosophers * sizeof(t_philosopher));	
 	threads = malloc((opts.number_of_philosophers + 1) * sizeof(pthread_t));
 
-	table.mutexes.forks = malloc((opts.number_of_philosophers) * sizeof(pthread_mutex_t));
+	table.mutexes.forks = malloc(opts.number_of_philosophers * sizeof(pthread_mutex_t));
+	table.fork_map = malloc(opts.number_of_philosophers * sizeof(int));
+	memset(table.fork_map, 0, opts.number_of_philosophers * sizeof(int));
 	i = 0;
 	while (i < opts.number_of_philosophers)
 	{
@@ -73,6 +75,7 @@ int			main(int ac, char **av)
 	}
 	pthread_mutex_init(&table.mutexes.status, NULL);
 	pthread_mutex_init(&table.mutexes.stop_simu, NULL);
+	pthread_mutex_init(&table.mutexes.fork_map, NULL);
 	table.philosophers = philosophers;
 	table.opts = &opts;
 	table.simulation_start = get_time(0);
@@ -120,6 +123,7 @@ int			main(int ac, char **av)
 	free(philosophers);
 	free(threads);
 	free(table.mutexes.forks);
+	free(table.fork_map);
 
 	ft_putstr_fd("End of the program\n", 1);
 	

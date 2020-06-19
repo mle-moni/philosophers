@@ -16,6 +16,7 @@ SRCS =		srcs/philosophers.c \
 			srcs/utils/ft_atoi.c \
 			srcs/utils/timing.c \
 			srcs/utils/status_print.c \
+			srcs/utils/get_forks.c \
 			srcs/utils/stop_simulation.c \
 			srcs/philo_routine.c \
 			srcs/verif_routine.c \
