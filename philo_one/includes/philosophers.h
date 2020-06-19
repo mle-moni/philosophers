@@ -55,4 +55,10 @@ typedef struct	s_table
 void			*philo_routine(void *param);
 void			*verif_routine(void *param);
 
+int				lock_forks(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
+pthread_mutex_t	*right_fork_mutex);
+int				philo_eat(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
+pthread_mutex_t	*right_fork_mutex);
+int				philo_sleep(t_philosopher *philosopher);
+
 #endif

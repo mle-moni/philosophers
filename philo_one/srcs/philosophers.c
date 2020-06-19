@@ -17,10 +17,6 @@
 ** time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
 */
 
-// DOCS:
-// https://timmurphy.org/2010/05/04/pthreads-in-c-a-minimal-working-example/
-// int pthread_create(pthread_t * thread, pthread_attr_t * attr, void * (*start_routine)(void *), void * arg);
-
 int			main(int ac, char **av)
 {
 	t_options	opts;
@@ -78,7 +74,6 @@ int			main(int ac, char **av)
 	pthread_mutex_init(&table.mutexes.fork_map, NULL);
 	table.philosophers = philosophers;
 	table.opts = &opts;
-	table.simulation_start = get_time(0);
 	table.stop = 0;
 	table.philosophers_ready = 0;
 	pthread_mutex_init(&table.philo_ready_mutex, NULL);
@@ -107,6 +102,7 @@ int			main(int ac, char **av)
 		ft_putstr_fd("Could not create thread\n", 2);
 		exit(3);
 	}
+	table.simulation_start = get_time(0);
 	pthread_mutex_unlock(&(table.mutexes.status));
 
 	i = 0;

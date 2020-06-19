@@ -8,8 +8,9 @@ struct s_philosopher;
 struct s_table;
 
 void			ft_putstr_fd(char const *s, int fd);
+void			ft_putstr_buff(char const *s, char buff[], int *index);
 int				ft_atoi(char *str);
-void			ft_putnb(int number);
+void			ft_putnb_buff(int num, char buff[], int *index);
 
 unsigned long	get_time(unsigned long simulation_start);
 
