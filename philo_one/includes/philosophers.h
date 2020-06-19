@@ -1,11 +1,13 @@
 #ifndef _PHILOSOPHERS_H
 # define _PHILOSOPHERS_H
 
-#include "utils.h"
-#include <pthread.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
+# include "utils.h"
+# include <pthread.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+
+# define DEBUG 0
 
 typedef struct	s_options
 {
@@ -54,6 +56,15 @@ typedef struct	s_table
 
 void			*philo_routine(void *param);
 void			*verif_routine(void *param);
+
+int				check_parameters(int ac, char **av);
+int				set_parameters(int ac, char **av, t_options *opts);
+
+int				memory_allocation(t_options *opts, t_table *table, pthread_t **threads);
+int				mutex_init(t_options *opts, t_table *table);
+int				table_init(t_options *opts, t_table *table, pthread_t *threads);
+int				create_threads(t_options *opts, t_table *table, pthread_t *threads);
+int				end_simulation(t_options *opts, t_table *table, pthread_t *threads);
 
 int				lock_forks(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
 pthread_mutex_t	*right_fork_mutex);

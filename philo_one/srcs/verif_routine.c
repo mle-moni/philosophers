@@ -27,7 +27,6 @@ static void	check_philosophers(t_table *table)
 		if (now - philo->last_meal_time > table->opts->time_to_die)
 		{
 			stop_simulation_set(table);
-			usleep(1000);
 			status_print("died", philo);
 		}
 		pthread_mutex_unlock(&philo->mutex);

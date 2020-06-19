@@ -4,6 +4,7 @@ void			philo_eat_sleep_think(t_philosopher *philosopher)
 {
 	pthread_mutex_t	*left_fork_mutex;
 	pthread_mutex_t	*right_fork_mutex;
+	int				waiting_time;
 
 	left_fork_mutex = get_left_fork(philosopher);
 	right_fork_mutex = get_right_fork(philosopher);
@@ -18,7 +19,10 @@ void			philo_eat_sleep_think(t_philosopher *philosopher)
 	if (philo_sleep(philosopher))
 		return ;
 	status_print("is thinking", philosopher);
-	usleep(((philosopher->table->opts->time_to_die - philosopher->table->opts->time_to_sleep) / 4) * 1000);
+	waiting_time = ((philosopher->table->opts->time_to_die - philosopher->table->opts->time_to_sleep) / 4);
+	if (waiting_time < 0)
+		return ;
+	usleep(waiting_time * 1000);
 }
 
 void			*philo_routine(void *param)
