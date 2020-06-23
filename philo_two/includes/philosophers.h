@@ -6,6 +6,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
+# include <semaphore.h>
+# include <fcntl.h>
+# include <sys/stat.h>
 
 # define DEBUG 0
 
@@ -33,8 +36,8 @@ typedef struct	s_philosopher
 typedef struct	s_mutexes
 {
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	status;
-	pthread_mutex_t	stop_simu;
+	sem_t			*status;
+	sem_t			*stop_simu;
 	pthread_mutex_t fork_map;
 }				t_mutexes;
 

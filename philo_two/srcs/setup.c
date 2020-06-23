@@ -28,8 +28,10 @@ int		mutex_init(t_options *opts, t_table *table)
 		pthread_mutex_init(&(table->mutexes.forks[i]), NULL);
 		i++;
 	}
-	pthread_mutex_init(&table->mutexes.status, NULL);
-	pthread_mutex_init(&table->mutexes.stop_simu, NULL);
+	sem_unlink("/status");
+	sem_unlink("/stop_simu");
+	table->mutexes.status = sem_open("/status", O_CREAT, S_IRWXU, 1);
+	table->mutexes.stop_simu = sem_open("/stop_simu", O_CREAT, S_IRWXU, 1);
 	pthread_mutex_init(&table->mutexes.fork_map, NULL);
 	pthread_mutex_init(&table->philo_ready_mutex, NULL);
 	return (0);
@@ -63,7 +65,7 @@ int		create_threads(t_options *opts, t_table *table, pthread_t *threads)
 	int		i;
 
 	i = 0;
-	pthread_mutex_lock(&(table->mutexes.status));
+	sem_wait(table->mutexes.status);
 	while (i < opts->number_of_philosophers)
 	{
 		if ((pthread_create(&(threads[i]), NULL, philo_routine, &table->philosophers[i])) != 0)
@@ -79,6 +81,6 @@ int		create_threads(t_options *opts, t_table *table, pthread_t *threads)
 		return(3);
 	}
 	table->simulation_start = get_time(0);
-	pthread_mutex_unlock(&(table->mutexes.status));
+	sem_post(table->mutexes.status);
 	return (0);
 }

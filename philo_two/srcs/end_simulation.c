@@ -43,8 +43,10 @@ static int	detroy_mutexes(t_options *opts, t_table *table)
 		ret += pthread_mutex_destroy(&table->philosophers[i].mutex);
 		i++;
 	}
-	ret += pthread_mutex_destroy(&table->mutexes.status);
-	ret += pthread_mutex_destroy(&table->mutexes.stop_simu);
+	ret += sem_close(table->mutexes.status);
+	ret += sem_close(table->mutexes.stop_simu);
+	sem_unlink("/status");
+	sem_unlink("/stop_simu");
 	ret += pthread_mutex_destroy(&table->mutexes.fork_map);
 	ret += pthread_mutex_destroy(&table->philo_ready_mutex);
 	return (ret);

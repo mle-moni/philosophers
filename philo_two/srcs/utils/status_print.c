@@ -24,19 +24,17 @@ static void	fill_buff(char *status, t_philosopher *philosopher, char buff[])
 void		status_print(char *status, t_philosopher *philosopher)
 {
 	char			buff[256];
-	pthread_mutex_t	*mutex;
 
 	memset(buff, 0, 256);
-	mutex = &(philosopher->table->mutexes.status);
-	pthread_mutex_lock(mutex);
+	sem_wait(philosopher->table->mutexes.status);
 	fill_buff(status, philosopher, buff);
 	if (status[0] == 'd' && status[1] == 'i' && status[2] == 'e')
 		usleep(1000);
 	else if (stop_simulation_get(philosopher->table))
 	{
-		pthread_mutex_unlock(mutex);
+		sem_post(philosopher->table->mutexes.status);
 		return ;
 	}
 	ft_putstr_fd(buff, 1);
-	pthread_mutex_unlock(mutex);
+	sem_post(philosopher->table->mutexes.status);
 }
