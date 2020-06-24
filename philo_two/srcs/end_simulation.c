@@ -26,8 +26,6 @@ static void	free_memory(t_table *table, pthread_t *threads)
 {
 	free(table->philosophers);
 	free(threads);
-	free(table->mutexes.forks);
-	free(table->fork_map);
 }
 
 static int	detroy_mutexes(t_options *opts, t_table *table)
@@ -42,7 +40,6 @@ static int	detroy_mutexes(t_options *opts, t_table *table)
 	while (i < opts->number_of_philosophers)
 	{
 		idx = 0;
-		ret += pthread_mutex_destroy(&(table->mutexes.forks[i]));
 		ret += sem_close(table->philosophers[i].mutex);
 		ft_putstr_buff("/philo_", buff, &idx);
 		ft_putnb_buff(i, buff, &idx);
@@ -51,12 +48,15 @@ static int	detroy_mutexes(t_options *opts, t_table *table)
 		i++;
 	}
 	ret += sem_close(table->mutexes.status);
-	ret += sem_close(table->mutexes.stop_simu);
-	ret += sem_close(table->philo_ready_mutex);
 	sem_unlink("/status");
+	ret += sem_close(table->mutexes.stop_simu);
 	sem_unlink("/stop_simu");
+	ret += sem_close(table->philo_ready_mutex);
 	sem_unlink("/philo_ready_mutex");
-	ret += pthread_mutex_destroy(&table->mutexes.fork_map);
+	ret += sem_close(table->mutexes.forks);
+	sem_unlink("/forks");
+	ret += sem_close(table->mutexes.forks_avail);
+	sem_unlink("/forks_avail");
 	return (ret);
 }
 

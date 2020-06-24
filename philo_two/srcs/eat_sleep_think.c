@@ -1,33 +1,24 @@
 #include "philosophers.h"
 
-int		lock_forks(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
-pthread_mutex_t	*right_fork_mutex)
+int		lock_forks(t_philosopher *philosopher)
 {
-	pthread_mutex_lock(&philosopher->table->mutexes.fork_map);
-	if (philosopher->table->opts->number_of_philosophers == 1)
+	sem_wait(philosopher->table->mutexes.forks_avail);
+	if (philosopher->table->forks_avail < 2)
 	{
-		pthread_mutex_unlock(&philosopher->table->mutexes.fork_map);
+		sem_post(philosopher->table->mutexes.forks_avail);
+		usleep(500);
 		return (1);
 	}
-	if (philosopher->table->fork_map[get_left_fork_id(philosopher)] ||
-	philosopher->table->fork_map[get_right_fork_id(philosopher)])
-	{
-		pthread_mutex_unlock(&philosopher->table->mutexes.fork_map);
-		usleep(1000);
-		return (1);
-	}
-	philosopher->table->fork_map[get_left_fork_id(philosopher)] = 1;
-	philosopher->table->fork_map[get_right_fork_id(philosopher)] = 1;
-	pthread_mutex_unlock(&philosopher->table->mutexes.fork_map);
-	pthread_mutex_lock(left_fork_mutex);
+	sem_wait(philosopher->table->mutexes.forks);
 	status_print("has taken a fork", philosopher);
-	pthread_mutex_lock(right_fork_mutex);
+	sem_wait(philosopher->table->mutexes.forks);
 	status_print("has taken a fork", philosopher);
+	philosopher->table->forks_avail -= 2;
+	sem_post(philosopher->table->mutexes.forks_avail);
 	return (0);
 }
 
-int		philo_eat(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
-pthread_mutex_t	*right_fork_mutex)
+int		philo_eat(t_philosopher *philosopher)
 {
 	sem_wait(philosopher->mutex);
 	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
@@ -37,17 +28,15 @@ pthread_mutex_t	*right_fork_mutex)
 	usleep(philosopher->table->opts->time_to_eat * 1000);
 	philosopher->number_of_meals++;
 
-	pthread_mutex_lock(&philosopher->table->mutexes.fork_map);
-	philosopher->table->fork_map[get_left_fork_id(philosopher)] = 0;
-	philosopher->table->fork_map[get_right_fork_id(philosopher)] = 0;
-	pthread_mutex_unlock(&philosopher->table->mutexes.fork_map);
-
 	sem_wait(philosopher->mutex);
 	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
 	sem_post(philosopher->mutex);
 
-	pthread_mutex_unlock(left_fork_mutex);
-	pthread_mutex_unlock(right_fork_mutex);
+	sem_wait(philosopher->table->mutexes.forks_avail);
+	sem_post(philosopher->table->mutexes.forks);
+	sem_post(philosopher->table->mutexes.forks);
+	philosopher->table->forks_avail += 2;
+	sem_post(philosopher->table->mutexes.forks_avail);
 	return (0);
 }
 

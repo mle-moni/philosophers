@@ -8,33 +8,22 @@ int		memory_allocation(t_options *opts, t_table *table, pthread_t **threads)
 	*threads = malloc((opts->number_of_philosophers + 1) * sizeof(pthread_t));
 	if (!*threads)
 		return (1);
-	table->mutexes.forks = malloc(opts->number_of_philosophers * sizeof(pthread_mutex_t));
-	if (!table->mutexes.forks)
-		return (1);
-	table->fork_map = malloc(opts->number_of_philosophers * sizeof(int));
-	if (!table->fork_map)
-		return (1);
-	memset(table->fork_map, 0, opts->number_of_philosophers * sizeof(int));
 	return (0);
 }
 
 int		mutex_init(t_options *opts, t_table *table)
 {
-	int		i;
-
-	i = 0;
-	while (i < opts->number_of_philosophers)
-	{
-		pthread_mutex_init(&(table->mutexes.forks[i]), NULL);
-		i++;
-	}
 	sem_unlink("/status");
-	sem_unlink("/stop_simu");
-	sem_unlink("/philo_ready_mutex");
 	table->mutexes.status = sem_open("/status", O_CREAT, S_IRWXU, 1);
+	sem_unlink("/stop_simu");
 	table->mutexes.stop_simu = sem_open("/stop_simu", O_CREAT, S_IRWXU, 1);
+	sem_unlink("/philo_ready_mutex");
 	table->philo_ready_mutex = sem_open("/philo_ready_mutex", O_CREAT, S_IRWXU, 1);
-	pthread_mutex_init(&table->mutexes.fork_map, NULL);
+	sem_unlink("/forks");
+	table->mutexes.forks = sem_open("/forks", O_CREAT, S_IRWXU, opts->number_of_philosophers);
+	sem_unlink("/forks_avail");
+	table->mutexes.forks_avail = sem_open("/forks_avail", O_CREAT, S_IRWXU, 1);
+	table->forks_avail = opts->number_of_philosophers;
 	return (0);
 }
 

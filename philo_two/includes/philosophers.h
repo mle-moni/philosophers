@@ -35,18 +35,18 @@ typedef struct	s_philosopher
 
 typedef struct	s_mutexes
 {
-	pthread_mutex_t	*forks;
+	sem_t			*forks;
 	sem_t			*status;
 	sem_t			*stop_simu;
-	pthread_mutex_t fork_map;
+	sem_t			*forks_avail;
 }				t_mutexes;
 
 typedef struct	s_table
 {
+	int				forks_avail;
 	int				stop;
 	int				simulation_start;
 	int				philosophers_ready;
-	int				*fork_map;
 	sem_t			*philo_ready_mutex;
 	t_philosopher	*philosophers;
 	t_mutexes		mutexes;
@@ -66,10 +66,8 @@ int				table_init(t_options *opts, t_table *table, pthread_t *threads);
 int				create_threads(t_options *opts, t_table *table, pthread_t *threads);
 int				end_simulation(t_options *opts, t_table *table, pthread_t *threads);
 
-int				lock_forks(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
-pthread_mutex_t	*right_fork_mutex);
-int				philo_eat(t_philosopher *philosopher, pthread_mutex_t	*left_fork_mutex,
-pthread_mutex_t	*right_fork_mutex);
+int				lock_forks(t_philosopher *philosopher);
+int				philo_eat(t_philosopher *philosopher);
 int				philo_sleep(t_philosopher *philosopher);
 
 #endif
