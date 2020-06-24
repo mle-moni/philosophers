@@ -34,21 +34,29 @@ static int	detroy_mutexes(t_options *opts, t_table *table)
 {
 	int		i;
 	int		ret;
+	char	buff[128];
+	int		idx;
 
 	i = 0;
 	ret = 0;
 	while (i < opts->number_of_philosophers)
 	{
+		idx = 0;
 		ret += pthread_mutex_destroy(&(table->mutexes.forks[i]));
-		ret += pthread_mutex_destroy(&table->philosophers[i].mutex);
+		ret += sem_close(table->philosophers[i].mutex);
+		ft_putstr_buff("/philo_", buff, &idx);
+		ft_putnb_buff(i, buff, &idx);
+		buff[idx] = '\0';
+		sem_unlink(buff);
 		i++;
 	}
 	ret += sem_close(table->mutexes.status);
 	ret += sem_close(table->mutexes.stop_simu);
+	ret += sem_close(table->philo_ready_mutex);
 	sem_unlink("/status");
 	sem_unlink("/stop_simu");
+	sem_unlink("/philo_ready_mutex");
 	ret += pthread_mutex_destroy(&table->mutexes.fork_map);
-	ret += pthread_mutex_destroy(&table->philo_ready_mutex);
 	return (ret);
 }
 

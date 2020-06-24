@@ -28,7 +28,7 @@ typedef struct	s_philosopher
 	int				index;
 	int				last_meal_time;
 	int				number_of_meals;
-	pthread_mutex_t	mutex;
+	sem_t			*mutex;
 	pthread_t		*thread;
 	struct	s_table	*table;
 }				t_philosopher;
@@ -47,15 +47,12 @@ typedef struct	s_table
 	int				simulation_start;
 	int				philosophers_ready;
 	int				*fork_map;
-	pthread_mutex_t	philo_ready_mutex;
+	sem_t			*philo_ready_mutex;
 	t_philosopher	*philosophers;
 	t_mutexes		mutexes;
 	t_options		*opts;
 }				t_table;
 
-/* table.mutexes is an array of number_of_forks + 1 mutex
-** the additionnal mutex is the one used for writing safely to the stdout
-*/
 
 void			*philo_routine(void *param);
 void			*verif_routine(void *param);

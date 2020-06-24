@@ -30,16 +30,19 @@ int		mutex_init(t_options *opts, t_table *table)
 	}
 	sem_unlink("/status");
 	sem_unlink("/stop_simu");
+	sem_unlink("/philo_ready_mutex");
 	table->mutexes.status = sem_open("/status", O_CREAT, S_IRWXU, 1);
 	table->mutexes.stop_simu = sem_open("/stop_simu", O_CREAT, S_IRWXU, 1);
+	table->philo_ready_mutex = sem_open("/philo_ready_mutex", O_CREAT, S_IRWXU, 1);
 	pthread_mutex_init(&table->mutexes.fork_map, NULL);
-	pthread_mutex_init(&table->philo_ready_mutex, NULL);
 	return (0);
 }
 
 int		table_init(t_options *opts, t_table *table, pthread_t *threads)
 {
 	int		i;
+	char	buff[128];
+	int		idx;
 
 	i = 0;
 	table->opts = opts;
@@ -54,7 +57,12 @@ int		table_init(t_options *opts, t_table *table, pthread_t *threads)
 		table->philosophers[i].number_of_meals = 0;
 		table->philosophers[i].thread = &(threads[i]);
 		table->philosophers[i].table = table;
-		pthread_mutex_init(&table->philosophers[i].mutex, NULL);
+		idx = 0;
+		ft_putstr_buff("/philo_", buff, &idx);
+		ft_putnb_buff(i, buff, &idx);
+		buff[idx] = '\0';
+		sem_unlink(buff);
+		table->philosophers[i].mutex = sem_open(buff, O_CREAT, S_IRWXU, 1);
 		i++;
 	}
 	return (0);
