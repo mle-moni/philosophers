@@ -28,10 +28,6 @@ int		philo_eat(t_philosopher *philosopher)
 	usleep(philosopher->table->opts->time_to_eat * 1000);
 	philosopher->number_of_meals++;
 
-	sem_wait(philosopher->mutex);
-	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
-	sem_post(philosopher->mutex);
-
 	sem_wait(philosopher->table->mutexes.forks_avail);
 	sem_post(philosopher->table->mutexes.forks);
 	sem_post(philosopher->table->mutexes.forks);

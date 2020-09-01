@@ -45,7 +45,7 @@ typedef struct	s_table
 {
 	int				forks_avail;
 	int				stop;
-	int				simulation_start;
+	unsigned long	simulation_start;
 	int				philosophers_ready;
 	sem_t			*philo_ready_mutex;
 	t_philosopher	*philosophers;
