@@ -26,8 +26,10 @@ static void	check_philosophers(t_table *table)
 		now = (int)get_time(table->simulation_start);
 		if (now - philo->last_meal_time > table->opts->time_to_die)
 		{
-			stop_simulation_set(table);
-			status_print("died", philo);
+			if (now - philo->last_meal_time < 10000000) {
+				stop_simulation_set(table);
+				status_print("died", philo);
+			}
 		}
 		pthread_mutex_unlock(&philo->mutex);
 		i++;

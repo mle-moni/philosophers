@@ -42,10 +42,6 @@ pthread_mutex_t	*right_fork_mutex)
 	philosopher->table->fork_map[get_right_fork_id(philosopher)] = 0;
 	pthread_mutex_unlock(&philosopher->table->mutexes.fork_map);
 
-	pthread_mutex_lock(&philosopher->mutex);
-	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
-	pthread_mutex_unlock(&philosopher->mutex);
-
 	pthread_mutex_unlock(left_fork_mutex);
 	pthread_mutex_unlock(right_fork_mutex);
 	return (0);

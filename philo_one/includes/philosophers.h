@@ -41,7 +41,7 @@ typedef struct	s_mutexes
 typedef struct	s_table
 {
 	int				stop;
-	int				simulation_start;
+	unsigned long	simulation_start;
 	int				philosophers_ready;
 	int				*fork_map;
 	pthread_mutex_t	philo_ready_mutex;
