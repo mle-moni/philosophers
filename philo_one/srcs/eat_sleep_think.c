@@ -33,9 +33,16 @@ pthread_mutex_t	*right_fork_mutex)
 	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
 	pthread_mutex_unlock(&philosopher->mutex);
 
-	status_print("is eating", philosopher);
-	usleep(philosopher->table->opts->time_to_eat * 1000);
 	philosopher->number_of_meals++;
+	status_print("is eating", philosopher);
+	if (philosopher->table->opts->number_of_times_each_philosopher_must_eat
+	== philosopher->number_of_meals)
+	{
+		pthread_mutex_lock(&philosopher->table->philo_ready_mutex);
+		philosopher->table->philosophers_ready++;
+		pthread_mutex_unlock(&philosopher->table->philo_ready_mutex);
+	}
+	usleep(philosopher->table->opts->time_to_eat * 1000);
 
 	pthread_mutex_lock(&philosopher->table->mutexes.fork_map);
 	philosopher->table->fork_map[get_left_fork_id(philosopher)] = 0;
@@ -50,13 +57,6 @@ pthread_mutex_t	*right_fork_mutex)
 int		philo_sleep(t_philosopher *philosopher)
 {
 	status_print("is sleeping", philosopher);
-	if (philosopher->table->opts->number_of_times_each_philosopher_must_eat
-	== philosopher->number_of_meals)
-	{
-		pthread_mutex_lock(&philosopher->table->philo_ready_mutex);
-		philosopher->table->philosophers_ready++;
-		pthread_mutex_unlock(&philosopher->table->philo_ready_mutex);
-	}
 	usleep(philosopher->table->opts->time_to_sleep * 1000);
 	return (0);
 }
