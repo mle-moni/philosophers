@@ -24,9 +24,16 @@ int		philo_eat(t_philosopher *philosopher)
 	philosopher->last_meal_time = get_time(philosopher->table->simulation_start);
 	sem_post(philosopher->mutex);
 
-	status_print("is eating", philosopher);
-	usleep(philosopher->table->opts->time_to_eat * 1000);
 	philosopher->number_of_meals++;
+	status_print("is eating", philosopher);
+	if (philosopher->table->opts->number_of_times_each_philosopher_must_eat
+	== philosopher->number_of_meals)
+	{
+		sem_wait(philosopher->table->philo_ready_mutex);
+		philosopher->table->philosophers_ready++;
+		sem_post(philosopher->table->philo_ready_mutex);
+	}
+	usleep(philosopher->table->opts->time_to_eat * 1000);
 
 	sem_wait(philosopher->table->mutexes.forks_avail);
 	sem_post(philosopher->table->mutexes.forks);
@@ -39,13 +46,6 @@ int		philo_eat(t_philosopher *philosopher)
 int		philo_sleep(t_philosopher *philosopher)
 {
 	status_print("is sleeping", philosopher);
-	if (philosopher->table->opts->number_of_times_each_philosopher_must_eat
-	== philosopher->number_of_meals)
-	{
-		sem_wait(philosopher->table->philo_ready_mutex);
-		philosopher->table->philosophers_ready++;
-		sem_post(philosopher->table->philo_ready_mutex);
-	}
 	usleep(philosopher->table->opts->time_to_sleep * 1000);
 	return (0);
 }
