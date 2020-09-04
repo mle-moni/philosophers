@@ -12,19 +12,35 @@
 
 #include "philosophers.h"
 
+void		free_philo_semaphore(t_philosopher *philo)
+{
+	char	buff[128];
+	int		idx;
+
+	sem_close(philo->mutex);
+	idx = 0;
+	ft_putstr_buff("/philo_", buff, &idx);
+	ft_putnb_buff(philo->index, buff, &idx);
+	buff[idx] = '\0';
+	sem_unlink(buff);
+}
+
 static void	free_memory(t_table *table)
 {
 	int		i;
 
 	i = 0;
-	pthread_mutex_destroy(&(table->mutexes.write));
+	sem_close(table->mutexes.write);
+	sem_close(table->mutexes.forks);
+	sem_close(table->mutexes.prelock);
+	sem_unlink("/forks");
+	sem_unlink("/write");
+	sem_unlink("/prelock");
 	while (i < table->philo_number)
 	{
-		pthread_mutex_destroy(&(table->mutexes.forks[i]));
-		pthread_mutex_destroy(&(table->men[i].mutex));
+		free_philo_semaphore(&(table->men[i]));
 		i++;
 	}
-	free(table->mutexes.forks);
 	free(table->men);
 }
 

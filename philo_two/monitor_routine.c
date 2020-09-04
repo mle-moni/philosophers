@@ -22,9 +22,9 @@ void		*monitor_routine(void *param)
 	philo->monitor_is_up = 1;
 	while (philo->table->alive)
 	{
-		pthread_mutex_lock(&(philo->mutex));
+		sem_wait(philo->mutex);
 		limit = philo->limit;
-		pthread_mutex_unlock(&(philo->mutex));
+		sem_post(philo->mutex);
 		if (!limit)
 			limit = philo->table->simu_start + philo->table->time_to_die;
 		now = get_time(0);

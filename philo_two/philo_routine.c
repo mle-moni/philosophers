@@ -18,19 +18,21 @@ static int	philo_eat(t_philosopher *philo)
 	t_table	*table;
 
 	table = philo->table;
-	pthread_mutex_lock(&(table->mutexes.forks[philo->forks.left]));
+	sem_wait(table->mutexes.prelock);
+	sem_wait(table->mutexes.forks);
 	status_print("has taken a fork", philo);
-	pthread_mutex_lock(&(table->mutexes.forks[philo->forks.right]));
+	sem_wait(table->mutexes.forks);
 	status_print("has taken a fork", philo);
+	sem_post(table->mutexes.prelock);
 	status_print("is eating", philo);
-	pthread_mutex_lock(&(philo->mutex));
+	sem_wait(philo->mutex);
 	philo->number_of_meals++;
 	number_of_meals = philo->number_of_meals;
 	philo->limit = get_time(0) + table->time_to_die;
-	pthread_mutex_unlock(&(philo->mutex));
+	sem_post(philo->mutex);
 	sleep_ms(table->time_to_eat);
-	pthread_mutex_unlock(&(table->mutexes.forks[philo->forks.right]));
-	pthread_mutex_unlock(&(table->mutexes.forks[philo->forks.left]));
+	sem_post(table->mutexes.forks);
+	sem_post(table->mutexes.forks);
 	return (number_of_meals);
 }
 

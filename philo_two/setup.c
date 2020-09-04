@@ -17,14 +17,6 @@ static int	memory_allocation(t_table *table)
 	table->men = malloc(table->philo_number * sizeof(t_philosopher));
 	if (!table->men)
 		return (1);
-	table->mutexes.forks =
-	malloc(table->philo_number * sizeof(pthread_mutex_t));
-	if (!table->mutexes.forks)
-	{
-		free(table->men);
-		table->men = NULL;
-		return (1);
-	}
 	return (0);
 }
 

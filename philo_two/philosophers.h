@@ -17,38 +17,34 @@
 # include <string.h>
 # include <pthread.h>
 # include <stdlib.h>
+# include <fcntl.h>
+# include <sys/stat.h>
+# include <semaphore.h>
 
 # define DEBUG 0
 
 struct s_table;
 typedef	uint64_t	t_timing;
 
-typedef struct		s_philo_forks
-{
-	int				left;
-	int				right;
-}					t_philo_forks;
-
 typedef struct		s_philosopher
 {
 	int				index;
 	t_timing		limit;
 	int				number_of_meals;
-	t_philo_forks	forks;
 	struct s_table	*table;
-	pthread_mutex_t	mutex;
+	sem_t			*mutex;
 	pthread_t		thread;
 	pthread_t		monitor;
 	int				monitor_is_up;
 	int				is_up;
 	int				running;
-	int				eat_count;
 }					t_philosopher;
 
 typedef struct		s_mutexes
 {
-	pthread_mutex_t	*forks;
-	pthread_mutex_t	write;
+	sem_t			*forks;
+	sem_t			*prelock;
+	sem_t			*write;
 }					t_mutexes;
 
 typedef struct		s_table
@@ -88,6 +84,7 @@ void				*monitor_routine(void *param);
 */
 
 int					join_philosophers(t_table *table);
+void				free_philo_semaphore(t_philosopher *philo);
 int					end_simulation(t_table *table);
 
 /*

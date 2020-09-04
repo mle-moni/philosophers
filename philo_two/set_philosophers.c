@@ -14,18 +14,25 @@
 
 static int	set_philosopher(t_philosopher *philo, t_table *table, int i)
 {
-	philo->eat_count = 0;
+	char	buff[128];
+	int		idx;
+
+	idx = 0;
 	philo->number_of_meals = 0;
 	philo->index = i;
-	philo->forks.left = i;
-	philo->forks.right = (i + 1) % table->philo_number;
 	philo->is_up = 0;
 	philo->monitor_is_up = 0;
 	philo->running = 1;
-	philo->eat_count = 0;
 	philo->limit = 0;
 	philo->table = table;
-	return (pthread_mutex_init(&philo->mutex, NULL));
+	ft_putstr_buff("/philo_", buff, &idx);
+	ft_putnb_buff(philo->index, buff, &idx);
+	buff[idx] = '\0';
+	sem_unlink(buff);
+	philo->mutex = sem_open(buff, O_CREAT, S_IRWXU, 1);
+	if (philo->mutex == SEM_FAILED)
+		return (1);
+	return (0);
 }
 
 int			set_philosophers(t_table *table)
@@ -42,10 +49,9 @@ int			set_philosophers(t_table *table)
 			i--;
 			while (i >= 0)
 			{
-				pthread_mutex_destroy(&(philo->mutex));
+				free_philo_semaphore(philo);
 				i--;
 			}
-			free(table->mutexes.forks);
 			free(table->men);
 			return (1);
 		}

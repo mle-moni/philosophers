@@ -14,33 +14,32 @@
 
 static int	init_forks(t_table *table)
 {
-	int		i;
-
-	i = 0;
-	while (i < table->philo_number)
+	sem_unlink("/forks");
+	table->mutexes.forks = sem_open("/forks", O_CREAT, S_IRWXU,
+	table->philo_number);
+	if (table->mutexes.forks == SEM_FAILED)
 	{
-		if (pthread_mutex_init(&(table->mutexes.forks[i]), NULL))
-		{
-			i--;
-			while (i >= 0)
-			{
-				pthread_mutex_destroy(&(table->mutexes.forks[i]));
-				i--;
-			}
-			free(table->mutexes.forks);
-			free(table->men);
-			return (1);
-		}
-		i++;
+		free(table->men);
+		return (1);
 	}
 	return (0);
 }
 
 int			mutex_init(t_table *table)
 {
-	if (pthread_mutex_init(&(table->mutexes.write), NULL))
+	sem_unlink("/write");
+	table->mutexes.write = sem_open("/write", O_CREAT, S_IRWXU, 1);
+	if (table->mutexes.write == SEM_FAILED)
 	{
-		free(table->mutexes.forks);
+		free(table->men);
+		return (1);
+	}
+	sem_unlink("/prelock");
+	table->mutexes.prelock = sem_open("/prelock", O_CREAT, S_IRWXU, 1);
+	if (table->mutexes.prelock == SEM_FAILED)
+	{
+		sem_close(table->mutexes.write);
+		sem_unlink("/write");
 		free(table->men);
 		return (1);
 	}

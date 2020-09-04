@@ -37,11 +37,9 @@ static void	fill_buff(char *status, t_philosopher *philosopher, char buff[])
 void		status_print(char *status, t_philosopher *philo)
 {
 	char			buff[256];
-	pthread_mutex_t	*mutex;
 
 	memset(buff, 0, 256);
-	mutex = &(philo->table->mutexes.write);
-	pthread_mutex_lock(mutex);
+	sem_wait(philo->table->mutexes.write);
 	if (philo->table->alive)
 	{
 		fill_buff(status, philo, buff);
@@ -52,5 +50,5 @@ void		status_print(char *status, t_philosopher *philo)
 		}
 		ft_putstr_fd(buff, 1);
 	}
-	pthread_mutex_unlock(mutex);
+	sem_post(philo->table->mutexes.write);
 }
