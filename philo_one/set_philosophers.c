@@ -14,7 +14,6 @@
 
 static int	set_philosopher(t_philosopher *philo, t_table *table, int i)
 {
-	philo->eat_count = 0;
 	philo->number_of_meals = 0;
 	philo->index = i;
 	philo->forks.left = i;
@@ -22,7 +21,6 @@ static int	set_philosopher(t_philosopher *philo, t_table *table, int i)
 	philo->is_up = 0;
 	philo->monitor_is_up = 0;
 	philo->running = 1;
-	philo->eat_count = 0;
 	philo->limit = 0;
 	philo->table = table;
 	return (pthread_mutex_init(&philo->mutex, NULL));

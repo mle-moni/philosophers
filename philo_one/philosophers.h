@@ -42,7 +42,6 @@ typedef struct		s_philosopher
 	int				monitor_is_up;
 	int				is_up;
 	int				running;
-	int				eat_count;
 }					t_philosopher;
 
 typedef struct		s_mutexes
