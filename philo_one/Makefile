@@ -31,7 +31,7 @@ CC =		gcc
 CFLAGS =	-Wall -Wextra -Werror
 DEBUG =		-Wall -Wextra -Werror -g3 -fsanitize=address
 
-CURRENT_FLAGS = $(DEBUG)
+CURRENT_FLAGS = $(CFLAGS)
 
 all:		$(NAME)
 

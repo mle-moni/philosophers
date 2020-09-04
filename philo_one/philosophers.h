@@ -39,6 +39,7 @@ typedef struct		s_philosopher
 	pthread_mutex_t	mutex;
 	pthread_t		thread;
 	pthread_t		monitor;
+	int				monitor_is_up;
 	int				is_up;
 	int				running;
 	int				eat_count;
@@ -86,7 +87,7 @@ void		*monitor_routine(void *param);
 ** END SIMULATION
 */
 
-int			join_threads(t_table *table);
+int			join_philosophers(t_table *table);
 int			end_simulation(t_table *table);
 
 /*

@@ -15,19 +15,18 @@
 void		*monitor_routine(void *param)
 {
 	t_philosopher	*philo;
-	t_table			*table;
 	t_timing		now;
 	t_timing		limit;
 
 	philo = param;
-	table = philo->table;
-	while (table->alive)
+	philo->monitor_is_up = 1;
+	while (philo->table->alive)
 	{
 		pthread_mutex_lock(&(philo->mutex));
 		limit = philo->limit;
 		pthread_mutex_unlock(&(philo->mutex));
 		if (!limit)
-			limit = table->simu_start + table->time_to_die;
+			limit = philo->table->simu_start + philo->table->time_to_die;
 		now = get_time(0);
 		if (philo->running == 0)
 			break ;

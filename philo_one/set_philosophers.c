@@ -20,6 +20,7 @@ static int	set_philosopher(t_philosopher *philo, t_table *table, int i)
 	philo->forks.left = i;
 	philo->forks.right = (i + 1) % table->philo_number;
 	philo->is_up = 0;
+	philo->monitor_is_up = 0;
 	philo->running = 1;
 	philo->eat_count = 0;
 	philo->limit = 0;

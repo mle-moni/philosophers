@@ -30,7 +30,7 @@ static void	free_memory(t_table *table)
 
 int			end_simulation(t_table *table)
 {
-	join_threads(table);
+	join_philosophers(table);
 	free_memory(table);
 	return (0);
 }

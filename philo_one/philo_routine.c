@@ -55,9 +55,13 @@ void		*philo_routine(void *param)
 		if (philo_eat(philo) == table->times_philo_must_eat)
 		{
 			philo->running = 0;
+			if (philo->monitor_is_up)
+				pthread_join(philo->monitor, NULL);
 			return (NULL);
 		}
 		philo_sleep_think(philo);
 	}
+	if (philo->monitor_is_up)
+		pthread_join(philo->monitor, NULL);
 	return (NULL);
 }

@@ -12,7 +12,7 @@
 
 #include "philosophers.h"
 
-int			join_threads(t_table *table)
+int			join_philosophers(t_table *table)
 {
 	int				i;
 	t_philosopher	*philo;
@@ -32,7 +32,6 @@ int			create_monitor(t_philosopher *philo)
 {
 	if (pthread_create(&(philo->monitor), NULL, monitor_routine, philo))
 		return (1);
-	pthread_detach(philo->monitor);
 	return (0);
 }
 
